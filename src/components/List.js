@@ -5,7 +5,8 @@ import { Grid } from "@material-ui/core";
 import Header from "./Header";
 import PokemonCard from "./PokemonCard";
 
-import data from "../data/pokemon.json";
+let data = require("../data/pokemon.json");
+
 
 class List extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class List extends Component {
   }
 
   filterData(data) {
-    const searchTerm = this.state.searchTerm;
+    const searchTerm = String(this.state.searchTerm).toLowerCase();
 
     return data.filter((pokemon) => {
       const { name } = pokemon;
