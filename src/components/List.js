@@ -48,7 +48,7 @@ class List extends Component {
         return (
       <div>
         <Header isHome={true} filterChange={this.filterChange} />
-        <Grid container spacing={2}>
+        <Grid container>
           {pokemon.map((item, index) => 
           PokemonCard(item, index))}
         </Grid>
