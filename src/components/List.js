@@ -66,6 +66,11 @@ class List extends Component {
       searchTerm: a.target.value,
     });
   }
+  componentDidMount(){
+    this.setState({
+      searchTerm: "",
+    });
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchTerm !== this.state.searchTerm) {

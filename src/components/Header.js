@@ -9,7 +9,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import HomeIcon from "@material-ui/icons/Home";
 import TextField from "@material-ui/core/TextField";
 
-const Header = ({ isHome, text, filterChange }) => {
+const Header = ({ text, filterChange }) => {
 
   return (
     <div>
