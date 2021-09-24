@@ -1,7 +1,7 @@
 {
   "name": "create-react-pokedex",
   "version": "0.1.0",
-  "homepage": "http://hullryan.github.io/React-Pokedex/",
+  "homepage": "https://hullryan.github.io/React-Pokedex/",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.1",
