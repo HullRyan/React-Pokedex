@@ -7,14 +7,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import HomeIcon from "@material-ui/icons/Home";
-import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 
 const Header = ({ isHome, text, filterChange }) => {
 
   return (
     <div>
-      {isHome ? (
         <AppBar position="static">
           <Toolbar>
             <NavLink to="/">
@@ -28,18 +26,6 @@ const Header = ({ isHome, text, filterChange }) => {
             </div>
           </Toolbar>
         </AppBar>
-      ) : (
-        <AppBar position="static">
-          <Toolbar>
-            <NavLink to="/">
-              <IconButton>
-                <HomeIcon />
-              </IconButton>
-            </NavLink>
-            <Typography>{text}</Typography>
-          </Toolbar>
-        </AppBar>
-      )}
     </div>
   );
 };
