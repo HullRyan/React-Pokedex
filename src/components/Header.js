@@ -31,14 +31,12 @@ const Header = ({ isHome, text, filterChange }) => {
 };
 
 Header.propTypes = {
-  isHome: PropTypes.bool,
   text: PropTypes.string,
   filter: PropTypes.string,
   filterChange: PropTypes.func,
 };
 
 Header.defaultProps = {
-  isHome: false,
   text: "",
   filter: "",
   filterChange: () => {},
