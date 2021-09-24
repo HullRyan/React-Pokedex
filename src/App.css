@@ -46,3 +46,7 @@
 .MuiCardHeader-title {
     text-align: center;
 }
+
+.css-bhp9pd-MuiPaper-root-MuiCard-root {
+    background-color: dimgray !important;
+}
