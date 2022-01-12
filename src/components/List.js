@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { forceCheck } from "react-lazyload";
 import {
   Grid,
@@ -8,15 +8,13 @@ import {
   Avatar,
   CardMedia,
   Modal,
-  Box,
-  Typography
 } from "@mui/material";
 import LazyLoad from "react-lazyload";
+import { FixedSizeGrid } from "react-window";
 import Header from "./Header";
 import "../App.css";
 
-let data = require("../data/pokemon.json");
-
+const data = require("../data/pokemon.json");
 
 const style = {
   position: "absolute",
@@ -30,7 +28,7 @@ const style = {
   p: 4,
 };
 
-class List extends Component {
+class List extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -38,12 +36,24 @@ class List extends Component {
       filter: "",
       setOpen: "",
       setIndex: null,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
     };
 
     this.filterData = this.filterData.bind(this);
     this.filterChange = this.filterChange.bind(this);
+    this.filterClear = this.filterClear.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleResize = (e) => {
+    this.setState({ windowWidth: window.innerWidth });
+    this.setState({ windowHeight: window.innerHeight });
+  };
+
+  componentWillUnmount() {
+    window.addEventListener("resize", this.handleResize);
   }
 
   handleOpen(index) {
@@ -66,10 +76,18 @@ class List extends Component {
       searchTerm: a.target.value,
     });
   }
-  componentDidMount(){
+
+  filterClear() {
     this.setState({
       searchTerm: "",
     });
+  }
+
+  componentDidMount() {
+    this.setState({
+      searchTerm: "",
+    });
+    window.addEventListener("resize", this.handleResize);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -92,21 +110,26 @@ class List extends Component {
     const pokemon = this.filterData(data);
     return (
       <div>
-        <Header isHome={true} filterChange={this.filterChange} />
+        <Header
+          isHome={true}
+          filterChange={this.filterChange}
+          filterClear={this.filterClear}
+        />
+        <div style={{ paddingTop: "60px" }}></div>
         <Grid container>
           {pokemon.map((item, index) => (
             <Grid
               item
               md
               key={index}
-              style={{ marginLeft: "15px", marginTop: "15px" }}
+              style={{ marginLeft: "10px", marginTop: "15px" }}
             >
               <Card style={{ width: "170px", height: "210px" }}>
                 <CardHeader
                   avatar={<Avatar>{item.id}</Avatar>}
                   title={item.name[0]}
                 />
-                <LazyLoad>
+                <LazyLoad height={200}>
                   <CardMedia
                     onClick={() => this.handleOpen(index)}
                     style={{
@@ -167,19 +190,161 @@ class List extends Component {
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description"
                 >
-                  <Box sx={style}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h6"
-                      component="h2"
+                  <Card sx={style}>
+                    <CardHeader
+                      className="bigCardTitle"
+                      avatar={<Avatar>{item.id}</Avatar>}
+                      title={item.name[0]}
+                    />
+                    <LazyLoad height={200}>
+                      <CardMedia
+                        onClick={() => this.handleOpen(index)}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          marginLeft: "auto",
+                          marginTop: "-30px",
+                          imageRendering: "pixelated",
+                        }}
+                        component="img"
+                        src={
+                          require(`../data/icon/${item.name[0]
+                            .replace("'", "")
+                            .replace("%", "")
+                            .replace(":", "")
+                            .replace(".", "")
+                            .replace(" ", "-")
+                            .replaceAll("é", "e")
+                            .toLowerCase()}.png`).default
+                        }
+                      />
+                    </LazyLoad>
+                    <CardContent
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        padding: "0",
+                        margin: "0",
+                      }}
                     >
-                      Text in a modal
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Duis mollis, est non commodo luctus, nisi erat porttitor
-                      ligula.
-                    </Typography>
-                  </Box>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          padding: "0",
+                          margin: "0",
+                        }}
+                      >
+                        <div
+                          className="typeDisplay"
+                          style={{
+                            backgroundColor:
+                              "var(--" + item.type[0].toLowerCase() + ")",
+                          }}
+                        >
+                          {item.type[0]}
+                        </div>
+                        {item.type[1] > "" ? (
+                          <div
+                            className="typeDisplay"
+                            style={{
+                              backgroundColor:
+                                "var(--" + item.type[1].toLowerCase() + ")",
+                            }}
+                          >
+                            {item.type[1]}
+                          </div>
+                        ) : (
+                          <div />
+                        )}
+                      </div>
+                      <div
+                        className="defenseDisplay"
+                        style={{
+                          margin: "auto",
+                        }}
+                      >
+                        Defenses
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "wrap",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            padding: "0",
+                            margin: "0",
+                          }}
+                        >
+                          <div className="defenseDisplay">Weak To:</div>
+
+                            {
+                              //console.log(item.defense)
+                              item.defense.map((type, number) => {
+                                let weak = [];
+                                for (const [key, value] of Object.entries(type)) {
+                                  //console.log(`${key}: ${value}`);
+                                  if(value > 1) {
+                                    weak.push(
+                                    <div
+                                      className="defenseDisplay"
+                                      style={{
+                                        backgroundColor:
+                                          "var(--" + key.toLowerCase() + ")",
+                                      }}
+                                    >
+                                      {key}:   x{value}
+                                    </div>);
+                                  }
+                                }
+                                return (weak);
+                              })
+                            }
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            padding: "0",
+                            margin: "0",
+                          }}
+                        >
+                          <div className="defenseDisplay">Strong Against:</div>
+                          {
+                              //console.log(item.defense)
+                              item.defense.map((type, number) => {
+                                let weak = [];
+                                for (const [key, value] of Object.entries(type)) {
+                                  //console.log(`${key}: ${value}`);
+                                  if(value < 1) {
+                                    weak.push(
+                                    <div
+                                      className="defenseDisplay"
+                                      style={{
+                                        backgroundColor:
+                                          "var(--" + key.toLowerCase() + ")",
+                                      }}
+                                    >
+                                      {key}:   x{value}
+                                    </div>);
+                                  }
+                                }
+                                return (weak);
+                              })
+                            }
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </Modal>
               </Card>
             </Grid>

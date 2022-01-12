@@ -1,36 +1,36 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { createTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import List from './components/List';
 
 const App = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  
+
 
   const theme = React.useMemo(
     () =>
       createTheme({
         palette: {
-          type: prefersDarkMode ? 'dark' : 'light',
+          mode: prefersDarkMode ? 'dark' : 'light',
         },
       }),
     [prefersDarkMode],
   );
 
   return (
+    <ThemeProvider theme={theme}>
     <div className='App'>
-      <ThemeProvider theme={theme}>
-      <CssBaseline/>
+    <CssBaseline/>
     <Router>
     <Switch>
       <Route path='/' component={List} />
     </Switch>
     </Router>
-    </ThemeProvider>
     </div>
+    </ThemeProvider>
   );
 }
 
